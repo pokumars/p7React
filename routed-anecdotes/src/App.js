@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Link, withRouter } from 'react-router-dom'
 
 
 const AnecdoteList = ({ anecdotes }) => (
@@ -40,6 +40,28 @@ const About = () => (
   </div>
 )
 
+const Notification = (props) => {
+  if(props.message === null) {
+    return null
+  }
+  const notificationStyle = {
+    color: 'blue',
+    background: 'lightgrey',
+    fontSize: 15,
+    borderStyle: 'solid',
+    borderRadius: 5,
+    paddingLeft: 10,
+    marginBottom: 10
+  }
+
+  return (
+    <div style={notificationStyle}>
+      <p>{props.message}</p>
+    </div>
+  )
+}
+
+
 const Footer = () => (
   <div>
     Learning about react router and other things. by Github user:
@@ -47,7 +69,7 @@ const Footer = () => (
     </div>
 )
 
-const CreateNew = (props) => {
+const CreateNewReroute = (props) => {
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
@@ -61,6 +83,12 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
+    notify(`added "${content}" `, 10000)
+    
+    props.history.push('/anecdotes')
+  }
+  const notify= (message, time) => {
+    props.makeNotification(message, time)
   }
 
   return (
@@ -85,6 +113,7 @@ const CreateNew = (props) => {
   )
 
 }
+const CreateNew = withRouter(CreateNewReroute)
 
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
@@ -105,6 +134,14 @@ const App = () => {
   ])
 
   const [notification, setNotification] = useState('')
+
+  const makeNotification = (theMessage, theTime) => {
+    setNotification(theMessage);
+
+    setTimeout(() => {
+      setNotification(null)
+    },theTime)
+  }
 
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0)
@@ -135,10 +172,12 @@ const App = () => {
           <Link to="/create" style={padding}>create new</Link>
 
           <h1>Software anecdotes</h1>
+          <Notification message={notification} />
         </div>
         <Route exact path="/anecdotes" render={() => <AnecdoteList anecdotes={anecdotes} />}/>
         <Route path="/about" render={() => <About />}/>
-        <Route path="/create" render={() => <CreateNew addNew={addNew} />}/>
+        <Route path="/create" render={() => <CreateNew addNew={addNew}
+        makeNotification={makeNotification} />}/>
         <Route path="/anecdotes/:id" render={({ match }) =>
           <Anecdote anecdote={anecdoteById(match.params.id)}/>}/>
         <div>
