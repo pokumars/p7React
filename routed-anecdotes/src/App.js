@@ -1,26 +1,30 @@
 import React, { useState } from 'react'
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 
-const Menu = () => {
-  const padding = {
-    paddingRight: 5
-  }
-  return (
-    <div>
-      <a href='#' style={padding}>anecdotes</a>
-      <a href='#' style={padding}>create new</a>
-      <a href='#' style={padding}>about</a>
-    </div>
-  )
-}
 
 const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
     <ul>
-      {anecdotes.map(anecdote => <li key={anecdote.id} >{anecdote.content}</li>)}
+      {anecdotes.map(anecdote =>
+         <li key={anecdote.id} >
+           <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
+         </li>)}
     </ul>
   </div>
 )
+
+const Anecdote = ({ anecdote }) => {
+  return (
+    <>
+      <p>{anecdote.content}</p>
+      <p><b>{anecdote.author}</b></p>
+      <p><a href={`${anecdote.info}`} >more info</a></p>
+      <p>votes {anecdote.votes}</p>
+    </>
+  )
+}
+
 
 const About = () => (
   <div>
@@ -38,10 +42,9 @@ const About = () => (
 
 const Footer = () => (
   <div>
-    Anecdote app for <a href='https://courses.helsinki.fi/fi/tkt21009'>Full Stack -sovelluskehitys</a>.
-
-    See <a href='https://github.com/fullstack-hy2019/routed-anecdotes/blob/master/src/App.js'>https://github.com/fullstack-hy2019/routed-anecdotes/blob/master/src/App.js</a> for the source code.
-  </div>
+    Learning about react router and other things. by Github user:
+    <a href='https://github.com/pokumars'>pokumars</a>
+    </div>
 )
 
 const CreateNew = (props) => {
@@ -121,16 +124,29 @@ const App = () => {
 
     setAnecdotes(anecdotes.map(a => a.id === id ? voted : a))
   }
+  const padding = { padding: 5 }
 
   return (
-    <div>
-      <h1>Software anecdotes</h1>
-      <Menu />
-      <AnecdoteList anecdotes={anecdotes} />
-      <About />
-      <CreateNew addNew={addNew} />
-      <Footer />
-    </div>
+    <Router>
+      <div>
+        <div>
+          <Link to="/anecdotes" style={padding}>anecdotes</Link>
+          <Link to="/about" style={padding} >about</Link>
+          <Link to="/create" style={padding}>create new</Link>
+
+          <h1>Software anecdotes</h1>
+        </div>
+        <Route exact path="/anecdotes" render={() => <AnecdoteList anecdotes={anecdotes} />}/>
+        <Route path="/about" render={() => <About />}/>
+        <Route path="/create" render={() => <CreateNew addNew={addNew} />}/>
+        <Route path="/anecdotes/:id" render={({ match }) =>
+          <Anecdote anecdote={anecdoteById(match.params.id)}/>}/>
+        <div>
+
+        </div>
+        <Footer />
+      </div>
+    </Router>
   )
 }
 
