@@ -155,15 +155,6 @@ const App = () => {
               </Nav>
             </Navbar.Collapse>
           </Navbar>
-          <div>
-             
-             
-            
-            {user
-              ? <em>{user} logged in</em>
-              : <Link to="/login">login</Link>
-            }
-          </div>
 
           <Route exact path="/" render={() => <Home />} />
           <Route exact path="/notes" render={() => <Notes notes={notes} />} />
