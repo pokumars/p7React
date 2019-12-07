@@ -116,6 +116,7 @@ const CreateNewReroute = (props) => {
 const CreateNew = withRouter(CreateNewReroute)
 
 const App = () => {
+  const [notification, setNotification] = useState(null)
   const [anecdotes, setAnecdotes] = useState([
     {
       content: 'If it hurts, do it more often',
@@ -133,7 +134,7 @@ const App = () => {
     }
   ])
 
-  const [notification, setNotification] = useState('')
+ 
 
   const makeNotification = (theMessage, theTime) => {
     setNotification(theMessage);
