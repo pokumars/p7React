@@ -1,10 +1,27 @@
 
 import './App.css';
 import React, { useState } from 'react'
-import { BrowserRouter as Router, Route, 
-  Link, Redirect, withRouter } from 'react-router-dom'
-import { Table, Form, Button, Alert, Navbar, Nav } from 'react-bootstrap'
+import { BrowserRouter 
+  as Router, Route, Link, Redirect, withRouter } from 'react-router-dom'
+import { Container, Table, Form, Button, Message, Menu, Alert  } from 'semantic-ui-react'
 
+import styled from 'styled-components'
+
+/*const Button = styled.button`
+  background: Bisque;
+  font-size: 1em;
+  margin: 1em;
+  padding: 0.25em 1em;
+  border: 2px solid Chocolate;
+  border-radius: 3px;
+`*/
+const Input = styled.input`
+  margin: 0.25em;
+`
+const Page = styled.div`
+  padding: 1em;
+  background: papayawhip;
+`
   
 const Home = () => (
   <div>
@@ -27,18 +44,15 @@ const Note = ({ note }) => {
 const Notes = (props) => (
   <div>
     <h2>Notes</h2>
-    <Table striped>
-      <tbody>
+    <Table striped celled>
+      <Table.Body>
       {props.notes.map(note =>
-        <tr key={note.id}>
-          <td>
-            <Link to={`/notes/${note.id}`}>{note.content}</Link>
-          </td>
-          <td>
-            {note.user}
-          </td>
-        </tr>)}
-      </tbody>
+        <Table.Row key={note.id}>
+          <Table.Cell><Link to={`/notes/${note.id}`}>{note.content}</Link></Table.Cell>
+          <Table.Cell>{note.user}</Table.Cell>
+        </Table.Row>
+      )}
+      </Table.Body>
     </Table>
   </div>
 )
@@ -57,30 +71,22 @@ const Users = () => (
 let Login = (props) => {
   const onSubmit = (event) => {
     event.preventDefault()
-    props.onLogin('mluukkai')
+    props.onLogin('pokumars')
     props.history.push('/')
   }
 
   return (
-    <div>
-      <h2>login</h2>
-      <Form onSubmit={onSubmit}>
-        <Form.Group>
-          <Form.Label>username:</Form.Label>
-          <Form.Control 
-          type="text"
-          name="username"/>
-          <Form.Label>password:</Form.Label>
-          <Form.Control 
-          type="password"
-          name="password"/>
-            
-          <Button variant="primary"type="submit">
-            login
-          </Button>
-        </Form.Group>
-      </Form>
-    </div>
+    <Form onSubmit={onSubmit}>
+      <Form.Field>
+        <label>username</label>
+        <input name='username' />
+      </Form.Field>
+      <Form.Field>
+        <label>password</label>
+        <input type='password' />
+      </Form.Field>
+      <Button type='submit'>login</Button>
+    </Form>
   )
 }
 
@@ -108,9 +114,8 @@ const App = () => {
     }
   ])
 
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState(null) 
   const [message, setMessage] = useState(null)
-
 
   const login = (user) => {
     setUser(user)
@@ -126,44 +131,36 @@ const App = () => {
   const padding = { padding: 5 }
 
   return (
-    <div className="container">
+    <Container>
+      {(message &&
+        <Message success>
+          {message}
+        </Message>
+      )}
       <Router>
         {(message &&
           <Alert variant="success">
             {message}
           </Alert>)}
         <div>
-          <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-            <Navbar.Collapse id="responsiv-navbar-nav">
-              <Nav>
-                <Nav.Link href="#" as="span">
-                  <Link style={padding} to="/">home</Link>
-                </Nav.Link>
-                <Nav.Link href="#" as="span">
-                  <Link style={padding} to="/notes">notes</Link>
-                </Nav.Link>
-                <Nav.Link href="#" as="span">
-                  <Link style={padding} to="/users">users</Link>
-                </Nav.Link>
-                <Nav.Link href="#" as="span">
-                  {user
-                    ? <em>{user} logged in</em>
-                    : <Link to="/login">login</Link>
-                  }
-                </Nav.Link>
-              </Nav>
-            </Navbar.Collapse>
-          </Navbar>
-          <div>
-             
-             
-            
-            {user
-              ? <em>{user} logged in</em>
-              : <Link to="/login">login</Link>
-            }
-          </div>
+          
+          <Menu inverted>
+            <Menu.Item link>
+              <Link to="/">home</Link>
+            </Menu.Item>
+            <Menu.Item link>
+              <Link to="/notes">notes</Link>
+            </Menu.Item>
+            <Menu.Item link>
+              <Link to="/users">users</Link>
+            </Menu.Item>
+            <Menu.Item link>
+              {user
+                ? <em>{user} logged in</em>
+                : <Link to="/login">login</Link>
+              }
+            </Menu.Item>
+          </Menu>
 
           <Route exact path="/" render={() => <Home />} />
           <Route exact path="/notes" render={() => <Notes notes={notes} />} />
@@ -182,7 +179,7 @@ const App = () => {
         <br />
         <em>Note app, Department of Computer Science 2019</em>
       </div>
-    </div>
+    </Container>
   )
 }
   
