@@ -1,28 +1,10 @@
-
-import './App.css';
 import React, { useState } from 'react'
-import { BrowserRouter 
-  as Router, Route, Link, Redirect, withRouter } from 'react-router-dom'
-import { Container, Table, Form, Button, Message, Menu, Alert  } from 'semantic-ui-react'
+import {
+  BrowserRouter as Router,
+  Route, Link, Redirect, withRouter
+} from 'react-router-dom'
+import { Container, Table, Form, Button, Message, Menu } from 'semantic-ui-react'
 
-import styled from 'styled-components'
-
-/*const Button = styled.button`
-  background: Bisque;
-  font-size: 1em;
-  margin: 1em;
-  padding: 0.25em 1em;
-  border: 2px solid Chocolate;
-  border-radius: 3px;
-`*/
-const Input = styled.input`
-  margin: 0.25em;
-`
-const Page = styled.div`
-  padding: 1em;
-  background: papayawhip;
-`
-  
 const Home = () => (
   <div>
     <h2>TKTL notes app</h2>
@@ -36,7 +18,7 @@ const Note = ({ note }) => {
     <div>
       <h2>{note.content}</h2>
       <div>{note.user}</div>
-      <div><strong>{note.important ? 'important' : ''}</strong></div>
+      <div><strong>{note.important ? 'tärkeä' : ''}</strong></div>
     </div>
   )
 }
@@ -46,12 +28,18 @@ const Notes = (props) => (
     <h2>Notes</h2>
     <Table striped celled>
       <Table.Body>
-      {props.notes.map(note =>
-        <Table.Row key={note.id}>
-          <Table.Cell><Link to={`/notes/${note.id}`}>{note.content}</Link></Table.Cell>
-          <Table.Cell>{note.user}</Table.Cell>
-        </Table.Row>
-      )}
+        {props.notes.map(note =>
+          <Table.Row key={note.id}>
+            <Table.Cell>
+              <Link to={`/notes/${note.id}`}>
+                {note.content}
+              </Link>
+            </Table.Cell>
+            <Table.Cell>
+              {note.user}
+            </Table.Cell>
+          </Table.Row>
+        )}
       </Table.Body>
     </Table>
   </div>
@@ -71,7 +59,7 @@ const Users = () => (
 let Login = (props) => {
   const onSubmit = (event) => {
     event.preventDefault()
-    props.onLogin('pokumars')
+    props.onLogin('mluukkai')
     props.history.push('/')
   }
 
@@ -96,19 +84,19 @@ const App = () => {
   const [notes, setNotes] = useState([
     {
       id: 1,
-      content: 'HTML on helppoa',
+      content: 'HTML is easy',
       important: true,
       user: 'Matti Luukkainen'
     },
     {
       id: 2,
-      content: 'Selain pystyy suorittamaan vain javascriptiä',
+      content: 'Browser can execute only Javascript',
       important: false,
       user: 'Matti Luukkainen'
     },
     {
       id: 3,
-      content: 'HTTP-protokollan tärkeimmät metodit ovat GET ja POST',
+      content: 'The most important methods of HTTP protocol are ovat GET are POST',
       important: true,
       user: 'Arto Hellas'
     }
@@ -127,9 +115,7 @@ const App = () => {
 
   const noteById = (id) =>
     notes.find(note => note.id === Number(id))
-
-  const padding = { padding: 5 }
-
+    
   return (
     <Container>
       {(message &&
@@ -138,12 +124,7 @@ const App = () => {
         </Message>
       )}
       <Router>
-        {(message &&
-          <Alert variant="success">
-            {message}
-          </Alert>)}
         <div>
-          
           <Menu inverted>
             <Menu.Item link>
               <Link to="/">home</Link>
@@ -160,8 +141,7 @@ const App = () => {
                 : <Link to="/login">login</Link>
               }
             </Menu.Item>
-          </Menu>
-
+          </Menu>   
           <Route exact path="/" render={() => <Home />} />
           <Route exact path="/notes" render={() => <Notes notes={notes} />} />
           <Route exact path="/notes/:id" render={({ match }) =>
@@ -172,7 +152,7 @@ const App = () => {
           } />
           <Route path="/login" render={() =>
             <Login onLogin={login} />}
-          />
+          />         
         </div>
       </Router>
       <div>
@@ -182,5 +162,5 @@ const App = () => {
     </Container>
   )
 }
-  
+
 export default App
